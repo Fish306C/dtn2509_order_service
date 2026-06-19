@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: order-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/dtn2509_order_service
+    username: root
+    password: Vinhtu3624@
+  jpa:
+    hibernate:
+      ddl-auto: none
+server:
+  port: 8081
