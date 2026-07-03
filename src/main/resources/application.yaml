@@ -5,8 +5,23 @@ spring:
     url: jdbc:mysql://localhost:3306/dtn2509_order_service
     username: root
     password: Vinhtu3624@
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        request.timeout.ms: 15000
+        linger.ms: 0
+      acks: all # 0/1
   jpa:
     hibernate:
       ddl-auto: none
 server:
-  port: 8081
+  port: 8083
+client:
+  product:
+    uri: http://localhost:8181
+kafka:
+  topic:
+    product-lock-requested: product_lock_requested

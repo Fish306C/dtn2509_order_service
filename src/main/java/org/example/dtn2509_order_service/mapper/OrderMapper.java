@@ -6,6 +6,7 @@ import org.example.dtn2509_order_service.dto.response.OrderItemResponse;
 import org.example.dtn2509_order_service.dto.response.OrderResponse;
 import org.example.dtn2509_order_service.entity.OrderEntity;
 import org.example.dtn2509_order_service.entity.OrderItemEntity;
+import org.example.dtn2509_order_service.event.OrderCreatedEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -13,6 +14,7 @@ import org.mapstruct.Mapping;
 public interface OrderMapper
 {
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", ignore = true)
     @Mapping(target = "totalAmount", ignore = true)
     @Mapping(target = "isDeleted", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
@@ -23,6 +25,7 @@ public interface OrderMapper
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "order", ignore = true)
+    @Mapping(target = "price", ignore = true)
     @Mapping(target = "isDeleted", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
@@ -34,4 +37,6 @@ public interface OrderMapper
 
     @Mapping(target = "orderId", source = "order.id")
     OrderItemResponse toRes(OrderItemEntity orderItemEntity);
+
+    OrderCreatedEvent toEvent(OrderEntity order);
 }

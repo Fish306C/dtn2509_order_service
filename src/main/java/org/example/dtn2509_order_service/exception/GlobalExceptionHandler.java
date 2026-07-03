@@ -1,6 +1,7 @@
 package org.example.dtn2509_order_service.exception;
 
 import org.example.dtn2509_order_service.dto.BaseResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler
 {
     @ExceptionHandler(ApplicationException.class)
@@ -34,6 +36,7 @@ public class GlobalExceptionHandler
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<BaseResponse<Object>> handleRuntimeException(RuntimeException e)
     {
+        log.error("Unhandled runtime exception", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new BaseResponse<>(null, "System error, please try later!"));
     }
 }

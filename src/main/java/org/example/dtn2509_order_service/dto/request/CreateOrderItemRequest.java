@@ -10,14 +10,8 @@ import lombok.Setter;
 @Setter
 public class CreateOrderItemRequest
 {
-    private String orderId;
-
     @NotBlank
     private String productId;
-
-    @Positive
-    @NotNull
-    private Integer price;
 
     @Positive
     @NotNull

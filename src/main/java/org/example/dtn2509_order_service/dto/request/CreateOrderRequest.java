@@ -15,9 +15,6 @@ public class CreateOrderRequest
     @NotBlank
     private String customerId;
 
-    @NotBlank
-    private String status;
-
     @Valid
     @NotEmpty
     private List<CreateOrderItemRequest> orderItems;
