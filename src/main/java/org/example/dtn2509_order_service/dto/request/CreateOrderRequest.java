@@ -15,6 +15,8 @@ public class CreateOrderRequest
     @NotBlank
     private String customerId;
 
+    private String promotionCode;
+
     @Valid
     @NotEmpty
     private List<CreateOrderItemRequest> orderItems;

@@ -3,7 +3,10 @@ package org.example.dtn2509_order_service.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dtn2509_order_service.client.ProductClient;
+import org.example.dtn2509_order_service.client.PromotionClient;
+import org.example.dtn2509_order_service.client.dto.request.LockPromotionRequest;
 import org.example.dtn2509_order_service.client.dto.request.ProductFilter;
+import org.example.dtn2509_order_service.client.dto.response.LockPromotionResponse;
 import org.example.dtn2509_order_service.client.dto.response.ProductResponse;
 import org.example.dtn2509_order_service.common.OrderStatus;
 import org.example.dtn2509_order_service.dto.request.CreateOrderItemRequest;
@@ -36,6 +39,7 @@ public class OrderService implements IOrderService
     private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
     private final ProductClient productClient;
+    private final PromotionClient promotionClient;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Override
@@ -70,6 +74,8 @@ public class OrderService implements IOrderService
         order.setCustomerId(createOrderRequest.getCustomerId());
         order.setStatus(OrderStatus.NEW.name());
         order.setTotalAmount(0);
+        order.setDiscountAmount(0);
+        order.setFinalAmount(0);
         OrderEntity createdOrder = orderRepository.save(order);
 
         // Validate từng Item bên trong order
@@ -110,9 +116,24 @@ public class OrderService implements IOrderService
 
         // Cập nhật tổng tiền đơn hàng
         createdOrder.setTotalAmount(totalAmount);
+        createdOrder.setDiscountAmount(0);
+        createdOrder.setFinalAmount(totalAmount);
         createdOrder.setOrderItems(orderItemEntityList);
 
         orderItemRepository.saveAll(orderItemEntityList);
+
+        if (hasText(createOrderRequest.getPromotionCode()))
+        {
+            LockPromotionRequest lockPromotionRequest = new LockPromotionRequest();
+            lockPromotionRequest.setOrderId(createdOrder.getId());
+            lockPromotionRequest.setPromotionCode(createOrderRequest.getPromotionCode());
+            lockPromotionRequest.setOrderAmount(totalAmount);
+
+            LockPromotionResponse lockPromotionResponse = promotionClient.lockPromotion(lockPromotionRequest);
+            createdOrder.setPromotionCode(lockPromotionResponse.getPromotionCode());
+            createdOrder.setDiscountAmount(lockPromotionResponse.getDiscountAmount());
+            createdOrder.setFinalAmount(lockPromotionResponse.getFinalAmount());
+        }
 
 
         OrderCreatedEvent orderCreatedEvent = orderMapper.toEvent(createdOrder);
@@ -175,5 +196,10 @@ public class OrderService implements IOrderService
                 throw new ApplicationException(400, HttpStatus.BAD_REQUEST.value(), "Product quantity must be positive!");
             }
         }
+    }
+
+    private boolean hasText(String value)
+    {
+        return value != null && !value.isBlank();
     }
 }

@@ -12,6 +12,8 @@ spring:
 client:
   product:
     uri: http://localhost:8080
+  promotion:
+    uri: http://localhost:8082
 kafka:
   topic:
     product-lock-requested: product_lock_requested

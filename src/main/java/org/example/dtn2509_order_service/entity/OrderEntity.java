@@ -36,6 +36,15 @@ public class OrderEntity extends BaseEntity
     @Column(name = "total_amount", nullable = false)
     private Integer totalAmount;
 
+    @Column(name = "promotion_code", length = 50)
+    private String promotionCode;
+
+    @Column(name = "discount_amount", nullable = false)
+    private Integer discountAmount;
+
+    @Column(name = "final_amount", nullable = false)
+    private Integer finalAmount;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItemEntity> orderItems = new ArrayList<>();
 }

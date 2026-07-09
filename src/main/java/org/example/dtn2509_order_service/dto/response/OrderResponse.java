@@ -13,5 +13,8 @@ public class OrderResponse
     private String customerId;
     private String status;
     private Integer totalAmount;
+    private String promotionCode;
+    private Integer discountAmount;
+    private Integer finalAmount;
     private List<OrderItemResponse> orderItems;
 }

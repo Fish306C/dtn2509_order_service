@@ -16,6 +16,8 @@ public interface OrderMapper
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "totalAmount", ignore = true)
+    @Mapping(target = "discountAmount", ignore = true)
+    @Mapping(target = "finalAmount", ignore = true)
     @Mapping(target = "isDeleted", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
